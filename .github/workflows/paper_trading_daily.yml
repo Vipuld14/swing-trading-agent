@@ -1,0 +1,44 @@
+name: Paper trading daily step
+
+# Phase 2 of ARCHITECTURE.md's roadmap: run the validated strategy against
+# live data every trading day, log what it would have done, no broker
+# credentials or real orders involved at all. State (paper_trading/state.json)
+# and the digest are committed straight back into the repo, so this needs no
+# database and no secrets.
+
+on:
+  schedule:
+    # 21:15 UTC = 4:15pm ET / 4:15pm CT DST-naive cron; close enough after the
+    # US market close (4:00pm ET) for the day's OHLC to be final on yfinance.
+    # Runs Mon-Fri only.
+    - cron: "15 21 * * 1-5"
+  workflow_dispatch: {}  # allow manual runs from the Actions tab, e.g. to catch up after an outage
+
+permissions:
+  contents: write
+
+jobs:
+  paper-trade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run daily paper-trading step
+        run: python paper_trading/run_daily.py --config config_diversified.yaml
+
+      - name: Commit updated state and digest
+        run: |
+          git config user.name "paper-trading-bot"
+          git config user.email "actions@github.com"
+          [ -f paper_trading/state.json ] && git add paper_trading/state.json
+          [ -f paper_trading/digest.md ] && git add paper_trading/digest.md
+          git diff --cached --quiet && echo "No state changes to commit." && exit 0
+          git commit -m "Paper trading: $(date -u +%Y-%m-%d) update"
+          git push

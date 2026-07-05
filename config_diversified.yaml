@@ -1,0 +1,103 @@
+# Broader, sector-diversified universe for testing whether the signal engine
+# has real edge, rather than results driven by a handful of outlier mega-cap
+# winners (NVDA/AMD-style moves). Deliberately excludes the most extreme
+# AI-supercycle names from config.yaml.
+#
+# Fetches from 2015 onward so 200-day SMAs are fully warmed up before the
+# earliest test period (2018) even starts -- run_multi_period.py overrides
+# backtest.start_date / end_date per period; this file's dates are just the
+# outer fetch window.
+
+universe:
+  # Technology
+  - MSFT
+  - ADBE
+  - CSCO
+  - ORCL
+  # Healthcare
+  - UNH
+  - JNJ
+  - PFE
+  # Financials
+  - JPM
+  - BAC
+  - GS
+  # Consumer discretionary
+  - HD
+  - MCD
+  - SBUX
+  # Consumer staples
+  - PG
+  - KO
+  - WMT
+  # Industrials
+  - HON
+  - CAT
+  - UPS
+  # Energy
+  - XOM
+  - CVX
+  # Utilities
+  - NEE
+  - DUK
+  # Materials
+  - LIN
+  # Communication services
+  - DIS
+  - VZ
+
+backtest:
+  start_date: "2015-01-01"
+  end_date: null
+  initial_capital: 25000
+  commission_per_trade: 0.0
+  slippage_bps: 5
+
+risk:
+  risk_pct_per_trade: 2.0
+  max_position_pct: 25.0
+  max_concurrent_positions: 6
+  profiles:
+    default:
+      stop_method: atr
+      atr_stop_multiple: 2.0
+      reward_risk_multiple: 2.5   # only used when use_trailing_stop is false
+      max_holding_days: 15        # only used when use_trailing_stop is false
+      # Off by default -- flip to true to let winners run instead of exiting
+      # at a fixed 2.5:1 target. Not yet validated; see run_diagnostics.py's
+      # Diagnostic 4 (includes the 2009-2017 out-of-sample check) before
+      # trusting this on.
+      use_trailing_stop: false
+      trailing_activation_r: 1.0        # only start trailing once price is up this many R from entry
+      trailing_max_holding_days: 60     # used instead of max_holding_days when trailing is on
+    canslim_lite:
+      stop_method: fixed_pct
+      stop_pct: 7.5
+      reward_risk_multiple: 3.0
+      max_holding_days: 40
+  # Promoted to on by default 2026-07: run_diagnostics.py's Diagnostic 3
+  # showed a clean win on the full 2018-present range and the 2020-2022
+  # regime (better CAGR, Sharpe, drawdown, AND profit factor at once), a
+  # wash in the 2023-present bull, and a small drag in the specific 2018-2020
+  # window (reduce_risk softens exposure in a broken market but doesn't hard
+  # -block like canslim_lite does, so it doesn't fully replicate that
+  # period's crash protection -- see README for the block_entries variant).
+  market_regime_overlay:
+    enabled: true
+    mode: reduce_risk
+    risk_reduction_factor: 0.5
+  prioritize_by_relative_strength: true
+
+strategy:
+  active: "both"
+  sma_fast: 50
+  sma_slow: 200
+  rsi_period: 14
+  rsi_pullback_level: 40
+  donchian_window: 20
+  volume_avg_window: 20
+  volume_breakout_multiple: 1.2
+  canslim_lite:
+    market_proxy: "SPY"
+    rs_window: 126
+    rs_top_pct: 0.30

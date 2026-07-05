@@ -1,0 +1,55 @@
+name: Paper trading intraday exit check
+
+# Faster-reaction layer on top of paper_trading_daily.yml: polls open
+# positions ~4x during market hours and exits immediately if a stop or
+# target has already been touched, instead of waiting for end of day.
+# Does not compute signals or open new positions -- entries stay on the
+# once-daily open-price fill timing in run_daily.py. If this never ran at
+# all, the daily job would still catch the same exit at end of day using
+# the full day's real high/low; this just reacts sooner.
+
+on:
+  schedule:
+    # Four checks spread across the US trading day (9:30am-4:00pm ET).
+    # Cron times are UTC and don't shift with US daylight saving, so the
+    # script itself re-validates market hours in America/New_York before
+    # doing anything -- a run that lands slightly outside the open is a
+    # harmless no-op rather than a bad trade decision.
+    - cron: "0 15 * * 1-5"   # ~11:00am ET / 10:00am EDT
+    - cron: "0 17 * * 1-5"   # ~1:00pm ET / 12:00pm EDT
+    - cron: "0 19 * * 1-5"   # ~3:00pm ET / 2:00pm EDT
+    - cron: "45 19 * * 1-5"  # ~3:45pm ET / 2:45pm EDT, ahead of the close
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  intraday-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check open positions for a stop/target hit
+        run: python paper_trading/check_intraday.py
+
+      - name: Commit if anything closed
+        run: |
+          git config user.name "paper-trading-bot"
+          git config user.email "actions@github.com"
+          # -f checks guard against the (Day 1 / pre-setup) case where the
+          # intraday check runs before run_daily.py has ever created these
+          # files -- `git add` on a path that doesn't exist yet is a hard
+          # error, not a no-op.
+          [ -f paper_trading/state.json ] && git add paper_trading/state.json
+          [ -f paper_trading/digest.md ] && git add paper_trading/digest.md
+          git diff --cached --quiet && echo "No changes to commit." && exit 0
+          git commit -m "Paper trading: intraday exit $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push

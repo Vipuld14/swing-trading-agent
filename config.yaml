@@ -1,0 +1,71 @@
+# Default backtest configuration for the swing trading agent.
+# Override any of these from the CLI (see run_backtest.py --help).
+
+universe:
+  - AAPL
+  - MSFT
+  - NVDA
+  - AMD
+  - AMZN
+  - GOOGL
+  - META
+  - JPM
+  - XOM
+  - COST
+
+backtest:
+  start_date: "2018-01-01"
+  end_date: null          # null = through most recent available bar
+  initial_capital: 25000
+  commission_per_trade: 0.0   # Robinhood equities are commission-free
+  slippage_bps: 5              # assumed slippage in basis points per fill
+
+risk:
+  risk_pct_per_trade: 2.0      # % of current equity risked per trade (applies to every strategy)
+  max_position_pct: 25.0       # no single position exceeds this % of equity
+  max_concurrent_positions: 6
+  # Stop/target/holding-period rules CAN differ by which signal opened the
+  # trade. "default" covers pullback and breakout; canslim_lite gets its
+  # own profile (O'Neil's tighter fixed stop, more room to run).
+  profiles:
+    default:
+      stop_method: atr          # stop = entry - atr_stop_multiple * ATR(14)
+      atr_stop_multiple: 2.0
+      reward_risk_multiple: 2.5 # target = entry + reward_risk_multiple * (entry - stop); only used when use_trailing_stop is false
+      max_holding_days: 15      # time-based exit if neither stop nor target hit; only used when use_trailing_stop is false
+      use_trailing_stop: false
+      trailing_activation_r: 1.0
+      trailing_max_holding_days: 60
+    canslim_lite:
+      stop_method: fixed_pct    # stop = entry * (1 - stop_pct / 100)
+      stop_pct: 7.5
+      reward_risk_multiple: 3.0
+      max_holding_days: 40
+  # Cross-cutting overlays that apply to NEW entries regardless of which
+  # strategy/profile produced the signal. Off by default so plain
+  # pullback/breakout/both results stay comparable to earlier runs; turn on
+  # to test whether they improve things (see run_diagnostics.py's Diagnostic 3).
+  market_regime_overlay:
+    enabled: false
+    mode: reduce_risk       # "block_entries" (no new positions) or "reduce_risk"
+    risk_reduction_factor: 0.5  # risk_pct_per_trade multiplier when market isn't in a confirmed uptrend (reduce_risk mode only)
+  prioritize_by_relative_strength: false  # when more signals fire than open slots, fill with the highest-RS names first instead of config list order
+
+strategy:
+  # which strategy to run: "pullback", "breakout", "both", or "canslim_lite"
+  active: "both"
+  sma_fast: 50
+  sma_slow: 200
+  rsi_period: 14
+  rsi_pullback_level: 40
+  donchian_window: 20
+  volume_avg_window: 20
+  volume_breakout_multiple: 1.2
+  canslim_lite:
+    # Price/volume-only approximation of CANSLIM's technical rules (breakout
+    # + relative strength + market timing). Does NOT include the fundamental
+    # screens (earnings/sales growth, institutional sponsorship) that are
+    # half of the real methodology -- see backtest/canslim_lite.py.
+    market_proxy: "SPY"
+    rs_window: 126     # ~6 months of trading days for the relative-strength lookback
+    rs_top_pct: 0.30    # only trade names in the top 30% of the universe by trailing return
