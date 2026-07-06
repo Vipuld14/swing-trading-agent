@@ -1,22 +1,38 @@
 {
-  "cash": 25000,
+  "cash": 18799.840087890625,
   "initial_capital": 25000,
-  "last_run_date": "2026-07-02",
-  "open_positions": {},
-  "pending_entries": {
+  "last_run_date": "2026-07-06",
+  "open_positions": {
     "DUK": {
       "ticker": "DUK",
-      "signal_date": "2026-07-02",
+      "shares": 48,
+      "entry_price": 129.1699981689453,
+      "entry_date": "2026-07-06",
+      "stop_price": 124.87125178563738,
+      "initial_stop_price": 124.87125178563738,
+      "target_price": 139.91686412721512,
       "signal_type": "breakout",
-      "atr_at_signal": 2.1493731916539627
+      "max_holding_days": 15,
+      "use_trailing_stop": false,
+      "trail_distance": 4.298746383307925,
+      "trailing_activation_price": Infinity,
+      "highest_price": 129.1699981689453,
+      "trailing_active": false,
+      "days_held": 0
     }
   },
+  "pending_entries": {},
   "closed_trades": [],
   "equity_history": [
     {
       "date": "2026-07-02",
       "strategy_equity": 25000,
       "benchmark_equity": 25000.0
+    },
+    {
+      "date": "2026-07-06",
+      "strategy_equity": 24846.400146484375,
+      "benchmark_equity": 24861.769771491003
     }
   ],
   "benchmark_shares": {
