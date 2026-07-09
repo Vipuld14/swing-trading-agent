@@ -14,3 +14,6 @@
   Benchmark: $24805.08 (-0.78%)  (equal-weight buy-and-hold)
   Cash: $18799.84
   Closed trades so far: 0
+
+## Intraday check -- 2026-07-09 14:46 EDT
+  EXIT DUK: 48 sh @ $124.83 (intraday_stop), P&L $-208.32 (-1.01R)
