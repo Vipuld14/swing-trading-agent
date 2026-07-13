@@ -1,7 +1,7 @@
 {
   "cash": 24791.68017578125,
   "initial_capital": 25000,
-  "last_run_date": "2026-07-10",
+  "last_run_date": "2026-07-13",
   "open_positions": {},
   "pending_entries": {},
   "closed_trades": [
@@ -48,6 +48,11 @@
       "date": "2026-07-10",
       "strategy_equity": 24791.68017578125,
       "benchmark_equity": 24974.166984485564
+    },
+    {
+      "date": "2026-07-13",
+      "strategy_equity": 24791.68017578125,
+      "benchmark_equity": 25019.70001003757
     }
   ],
   "benchmark_shares": {
