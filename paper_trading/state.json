@@ -1,9 +1,16 @@
 {
   "cash": 24791.68017578125,
   "initial_capital": 25000,
-  "last_run_date": "2026-07-13",
+  "last_run_date": "2026-07-14",
   "open_positions": {},
-  "pending_entries": {},
+  "pending_entries": {
+    "GS": {
+      "ticker": "GS",
+      "signal_date": "2026-07-14",
+      "signal_type": "breakout",
+      "atr_at_signal": 34.69057247708398
+    }
+  },
   "closed_trades": [
     {
       "ticker": "DUK",
@@ -53,6 +60,11 @@
       "date": "2026-07-13",
       "strategy_equity": 24791.68017578125,
       "benchmark_equity": 25019.70001003757
+    },
+    {
+      "date": "2026-07-14",
+      "strategy_equity": 24791.68017578125,
+      "benchmark_equity": 24970.849869317855
     }
   ],
   "benchmark_shares": {
