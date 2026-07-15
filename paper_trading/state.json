@@ -1,14 +1,32 @@
 {
-  "cash": 24791.68017578125,
+  "cash": 19049.579956054688,
   "initial_capital": 25000,
-  "last_run_date": "2026-07-14",
-  "open_positions": {},
+  "last_run_date": "2026-07-15",
+  "open_positions": {
+    "GS": {
+      "ticker": "GS",
+      "shares": 5,
+      "entry_price": 1148.4200439453125,
+      "entry_date": "2026-07-15",
+      "stop_price": 1079.0388989911446,
+      "initial_stop_price": 1079.0388989911446,
+      "target_price": 1321.8729063307323,
+      "signal_type": "breakout",
+      "max_holding_days": 15,
+      "use_trailing_stop": false,
+      "trail_distance": 69.38114495416797,
+      "trailing_activation_price": Infinity,
+      "highest_price": 1148.4200439453125,
+      "trailing_active": false,
+      "days_held": 0
+    }
+  },
   "pending_entries": {
     "GS": {
       "ticker": "GS",
-      "signal_date": "2026-07-14",
+      "signal_date": "2026-07-15",
       "signal_type": "breakout",
-      "atr_at_signal": 34.69057247708398
+      "atr_at_signal": 34.82056591516165
     }
   },
   "closed_trades": [
@@ -65,6 +83,11 @@
       "date": "2026-07-14",
       "strategy_equity": 24791.68017578125,
       "benchmark_equity": 24970.849869317855
+    },
+    {
+      "date": "2026-07-15",
+      "strategy_equity": 24809.9296875,
+      "benchmark_equity": 24958.821414878243
     }
   ],
   "benchmark_shares": {
