@@ -1,17 +1,16 @@
-# Paper trading digest -- 2026-07-15
+# Paper trading digest -- 2026-07-16
 
 ## Today's activity
-[2026-07-15]
-  ENTER GS: 5 sh @ $1148.42 (breakout), stop $1079.04, target $1321.87
+  (no exits or entries)
 
 ## Open positions
-  GS: 5 sh @ $1148.42 (breakout), stop $1079.04, held 0/15 days
+  GS: 5 sh @ $1148.42 (breakout), stop $1079.04, held 1/15 days
 
 ## Watching for tomorrow's open
-  GS (breakout)
+  (no new signals today)
 
 ## Running P&L since paper trading started
-  Strategy:  $24809.93 (-0.76%)
-  Benchmark: $24958.82 (-0.16%)  (equal-weight buy-and-hold)
+  Strategy:  $24526.88 (-1.89%)
+  Benchmark: $25174.31 (+0.70%)  (equal-weight buy-and-hold)
   Cash: $19049.58
   Closed trades so far: 1
