@@ -14,3 +14,6 @@
   Benchmark: $25174.31 (+0.70%)  (equal-weight buy-and-hold)
   Cash: $19049.58
   Closed trades so far: 1
+
+## Intraday check -- 2026-07-17 13:58 EDT
+  EXIT GS: 5 sh @ $1076.38 (intraday_stop), P&L $-360.20 (-1.04R)
